@@ -46,7 +46,7 @@ jobs:
           port: ${{ secrets.REMOTE_PORT }}
           script_stop: true
           script: |
-            rm -rf /home/ubuntu/devops1_shell
+            rm -rf /home/ubuntu/github_action_Test
             git clone https://github.com/syy0O/github_action_Test.git
-            chmod 755 /home/ubuntu/devops1_shell/deployment.sh
-            /home/ubuntu/devops1_shell/deployment.sh
+            chmod 755 /home/ubuntu/github_action_Test/deployment.sh
+            bash /home/ubuntu/github_action_Test/deployment.sh
