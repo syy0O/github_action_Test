@@ -3,48 +3,50 @@ name: devops test
 on:
   push:
     branches: [ main ]
-    
+
 jobs:
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-    - name: Checkout sources
-      uses: actions/checkout@v4
+      - name: Checkout sources
+        uses: actions/checkout@v4
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-    - name: Build with Gradle
-      run: |
-        chmod +x ./gradlew
-        ./gradlew build
+      - name: Build with Gradle
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build
 
-    - name: copy file via ssh
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.REMOTE_HOST }}
-        username: ${{ secrets.REMOTE_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.REMOTE_PORT }}
-        source: "build/libs/devops1_shell-0.0.1-SNAPSHOT.jar"
-        target: "devops1_shell-0.0.1-SNAPSHOT.jar"
+      - name: copy file via ssh
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.REMOTE_PORT }}
+          source: "build/libs/devops1_shell-0.0.1-SNAPSHOT.jar"
+          target: "spring"
 
-    - name: restart spring project
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.REMOTE_HOST }}
-        username: ${{ secrets.REMOTE_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.REMOTE_PORT }}
-        script: |
-          rm -rf /home/ubuntu/devops 
-          git clone https://github.com/syy0O/github_action_Test.git
-          bash /home/ubuntu/github_action_Test/deployment.sh
+      - name: restart spring project
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.REMOTE_PORT }}
+          script_stop: true
+          script: |
+            rm -rf /home/ubuntu/devops 
+            git clone https://github.com/syy0O/github_action_Test.git
+            chmod 755 /home/ubuntu/devops1_shell/github_action_Test.git
+            /home/ubuntu/devops1_shell/deployment.sh
