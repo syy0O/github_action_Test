@@ -48,5 +48,5 @@ jobs:
           script: |
             rm -rf /home/ubuntu/devops 
             git clone https://github.com/syy0O/github_action_Test.git
-            chmod 755 /home/ubuntu/devops1_shell/github_action_Test.git
+            chmod 755 /home/ubuntu/devops1_shell/deployment.sh
             /home/ubuntu/devops1_shell/deployment.sh
